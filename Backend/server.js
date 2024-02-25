@@ -16,7 +16,6 @@ connectDB();
 readdirSync('./Routes')
     .map((r) => app.use('/api', require('./Routes/' + r)));
 
-
 app.listen(PORT, () => {
     console.log(`Server on Port ${PORT}`)
 })

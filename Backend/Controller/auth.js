@@ -1,17 +1,25 @@
-const Users = require('../Model/auth.model')
+const users = require('../Model/auth.model')
+const bcrypt = require('bcrypt')
+const dotenv = require('dotenv');
+dotenv.config();
 
-
-// exports.login = async(req, res) =>{
-//     try{
-        
-//     }
-// }
-
-
-exports.register = async(req, res) => {
+exports.register = async (req, res) => {
     try {
-        res.json(req.body)
-        const SaveUser = await Users(req.body).save();
-    } catch(err){console.log(err)}
+        const Saltrounds = process.env.SALTROUNDS;
+        const hashPassword = await bcrypt.hash(req.body.password, parseInt(Saltrounds))
+        const { username , email } = req.body;
+
+        const addUser = new users({
+            "username": username,
+            "email": email,
+            "password": hashPassword
+        })
+
+        const SaveUser = await addUser.save();
+        res.status(200).json({
+            "success": true,
+            "message": "Register Successfully"
+        });
+    } catch (err) { console.log(err) }
 
 }
